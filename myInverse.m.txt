@@ -1,0 +1,94 @@
+%This Octave script solves sequences of polynomials using a matrix.
+% This script makes a pivot in the first row of a matrix A (if possible), then zeros
+% out the column containing the pivot
+%A=[3 1 -5 -4; 2 3 -5 -5; -1 1 -4 0; 1 -1 1 0; -3 -1 2 4];
+%A=[2 -3 2 2; 0 3 -2 0; 0 0 1 -6]
+%A=[0 0 0 0; 0 2 -5 4; -1 0 0 0; 1 -1 1 0];
+A=[1 1;-1 2];
+
+[m n]=size(A);
+
+if (m==n)
+AT = A(1:n);
+B=eye(m);
+
+BT = A(1:n);
+
+
+% Find the position of the leftmost nonzero entry in the first row
+row=1;
+col=1;
+while row <= n && row <=m
+  col=1;
+  %disp(A);
+while A(row,col)==0 && col<n
+    
+    col=col+1;
+    
+end;%while 2
+if A(row, col)!=0
+%If col=n+1, then A(1,:) is the all zeros row, so we're done. If col<=1
+%then we must zero out the rest of the column
+
+if col<=n
+
+    %Make the leftmost nonzero entry equal to 1
+    B(row,:) = B(row,:)/A(row,col);
+    A(row,:) = A(row,:)/A(row,col);
+    
+   
+    %Eliminate the column entries 
+
+    for jj=1:m
+    if jj>m
+  
+    elseif jj==row
+      
+    else
+        B(jj,:) = B(jj,:) - A(jj,col)*B(row,:);
+        A(jj,:) = A(jj,:) - A(jj,col)*A(row,:);
+        
+        
+    end;  %if 2
+ end; %for 1
+ 
+end;%if 1
+end;
+row=row+1;
+end; %while 1
+kk=1;
+var=1;
+for count=(1:(m-1))
+for kk=(1:(m-1)) 
+var=1;  
+while var<=n;  
+if A(kk+1, var)>A(kk, var)
+ 
+AT(1, :)=A(kk+1,:);
+BT(1, :)=B(kk+1, :); 
+
+A(kk+1, :)=A(kk,:);
+B(kk+1, :)=B(kk,:);
+
+A(kk, :)=AT(1, :);
+B(kk, :)=BT(1, :);
+
+break
+else if (A(kk, var)==A(kk+1, var))
+var=var+1;
+else
+break
+end;
+
+end;
+end;
+end;
+end;
+
+if (!isequal(A, eye(size(A, 1))))
+disp  "Error: this is non-invertible; its RREF isn't the identity.";
+else
+disp(B);
+end;
+else disp "Error: this is non-invertible due to inaccurate dimensions.";
+end
